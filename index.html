@@ -1,372 +1,421 @@
+
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遇见生命中的那个人</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to right, #ffecd2, #fcb69f);
-            color: #333;
-            transition: background 0.5s;
-        }
-
-        h1 {
-            margin-top: 20px;
-            font-size: 28px;
-            color: #333;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s, box-shadow 0.3s, transform 0.1s;
-        }
-
-        button:hover {
-            background: linear-gradient(to right, #feb47b, #ff7e5f);
-            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        img {
-            margin-top: 20px;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            border: 4px solid #feb47b;
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out forwards;
-        }
-
-        #status, #nickname {
-            margin-top: 20px;
-            font-size: 16px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        #message {
-            margin-top: 20px;
-            color: red;
-            font-size: 16px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        #addFriendButton {
-            margin-top: 20px;
-            padding: 8px 16px;
-            font-size: 16px;
-            cursor: pointer;
-            display: none;
-            background: linear-gradient(to right, #6dd5ed, #2193b0);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s, box-shadow 0.3s, transform 0.1s;
-        }
-
-        #addFriendButton:hover {
-            background: linear-gradient(to right, #2193b0, #6dd5ed);
-            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #addFriendButton:active {
-            transform: scale(0.95);
-        }
-
-        #prefixInput {
-            margin-bottom: 20px;
-            font-size: 18px;
-            padding: 8px;
-            width: 80%;
-            max-width: 300px;
-            border: 2px solid #feb47b;
-            border-radius: 25px;
-            box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s, border-color 0.3s;
-        }
-
-        #prefixInput:focus {
-            box-shadow: 0px 0px 10px rgba(255, 126, 95, 0.5);
-            border-color: #ff7e5f;
-            outline: none;
-        }
-
-        #copyButton {
-            padding: 5px 10px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 10px;
-            background: #ffffff;
-            border: 2px solid #feb47b;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            color: #ff7e5f;
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        #copyButton:hover {
-            background: #feb47b;
-            color: white;
-            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-        }
-
-
-        #welcomeModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            max-width: 80%;
-            box-sizing: border-box;
-            color: #333;
-            text-align: left;
-            opacity: 0;
-            animation: fadeInModal 0.5s forwards;
-        }
-
-        #welcomeModal p {
-            font-size: 16px;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        #welcomeModal button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            transition: background 0.3s, box-shadow 0.3s, transform 0.1s;
-        }
-
-        #welcomeModal button:hover {
-            background-color: #45a049;
-            box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #welcomeModal button:active {
-            transform: scale(0.95);
-        }
-
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            opacity: 0;
-            animation: fadeInModal 0.5s forwards;
-        }
-
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeInModal {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-   
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
-            }
-
-            button {
-                font-size: 14px;
-            }
-
-            img {
-                width: 60px;
-                height: 60px;
-            }
-
-            #status, #nickname, #message {
-                font-size: 14px;
-            }
-
-            #prefixInput {
-                font-size: 16px;
-                padding: 6px;
-            }
-
-            #copyButton {
-                font-size: 10px;
-                padding: 4px 8px;
-            }
-
-            #welcomeModal p {
-                font-size: 14px;
-            }
-
-            #welcomeModal button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WWZ-AI</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: #f4f4f9;
+    }
+    #header {
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    #chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 98%;
+      background: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    #chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #f1f1f1;
+    }
+    .user, .bot {
+      display: flex;
+      align-items: flex-end;
+      position: relative;
+    }
+    .user {
+      justify-content: flex-end;
+    }
+    .bot {
+      justify-content: flex-start;
+    }
+    .message {
+      display: inline-block;
+      padding: 15px;
+      border-radius: 15px;
+      max-width: 60%;
+      word-break: break-word;
+      font-size: 16px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .bot .message {
+      background-color: #e0e0e0;
+      border-bottom-left-radius: 0;
+    }
+    .user .message {
+      background-color: #4CAF50;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+    .preview-button, .cancel-preview-button {
+      padding: 5px 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+    .preview-button:hover, .cancel-preview-button:hover {
+      background-color: #45a049;
+    }
+    .cancel-preview-button {
+      background-color: red;
+      margin-left: 10px;
+    }
+    .cancel-preview-button:hover {
+      background-color: darkred;
+    }
+    .preview-window {
+      margin-top: 10px;
+      width: 100%;
+      height: 500px; /* Increased height for better visibility */
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      overflow: auto;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    .preview-window iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #input-container {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid #ccc;
+      padding: 15px;
+      background-color: #fff;
+      align-items: center;
+    }
+    #user-input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .button-group {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+    button {
+      padding: 15px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      flex: 1;
+      margin: 0 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #delete-btn {
+      background-color: red;
+      color: white;
+    }
+    #delete-btn:hover {
+      background-color: darkred;
+    }
+    #model-selector {
+      display: flex;
+      align-items: center;
+    }
+    #model-options {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      flex: 1;
+      margin: 0 5px;
+    }
+    #welcome-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #welcome-message {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      max-width: 80%;
+    }
+    #welcome-message button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #welcome-message button:hover {
+      background-color: #45a049;
+    }
+    @media (min-width: 600px) {
+      #input-container {
+        flex-direction: row;
+        align-items: center;
+      }
+      #user-input {
+        flex: 1;
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+      .button-group {
+        flex-direction: row;
+        width: auto;
+      }
+    }
+  </style>
 </head>
 <body>
-
-    <h1>遇见生命中的那个人</h1>
-    
-    <input type="number" id="prefixInput" placeholder="可以指定QQ号第一位" min="1" max="9">
-    <button id="findButton">遇见生命中的那个人</button>
-    <div id="result">
-        <p id="randomNumber">
-            随机生成的QQ号: <span id="qqNumber"></span>
-            <button id="copyButton" style="display:none;">复制</button>
-        </p>
-        <p id="status"></p>
-        <p id="nickname"></p>
-        <img id="avatar" src="" alt="" style="display:none;">
-        <p id="message"></p>
-        <button id="addFriendButton">添加他（她）为好友</button>
+  <div id="header">WUWANGZE-AI</div>
+  <div id="chat-container">
+    <div id="chat-box"></div>
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Type a message">
+      <div class="button-group">
+        <button onclick="sendMessage()">Send</button>
+        <button id="delete-btn" onclick="deleteMessages()">Delete</button>
+        <div id="model-selector">
+          <select id="model-options" onchange="changeModel()">
+            <option value="gpt-4o-mini">gpt-4o-mini</option>
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="gpt-4-turbo">gpt-4-turbo</option>
+          </select>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div id="overlay"></div>
-    <div id="welcomeModal">
-        <p>本站官方交流群：992310237   欢迎进入</p>
-        <p>欢迎使用哦！经测试，不管QQ状态如何，接口返回结果均为电脑离线，一般来讲，不出现加好友按钮的，则代表没有这个用户或者搜索不到</p>
-        <p>如果显示“没有找到这个人的信息嗷~”，忽略重新遇见一个就好啦</p>
-        <p>有时候吧，请求很多次都会请求失败，要多多尝试，不然就会错过命中的他（她）了哦</p>
-        <button id="closeModalButton">关闭</button>
+  <div id="welcome-modal">
+    <div id="welcome-message">
+      <p>该网站为AI问答网站，可以向AI提问，AI会耐心进行解答，可以和AI聊天</p>
+      <p>欢迎进入官方QQ交流群：992310237<br>您的进群便是对我最大的支持</p>
+      <p>支持HTML代码在线预览</p>
+      <p>PS：如遇到长时间不回复，请重试</p>
+      <button onclick="closeModal()">确认</button>
     </div>
+  </div>
 
-    <script>
-       
-        function showWelcomeModal() {
-            document.getElementById('welcomeModal').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
+  <script>
+    var conversation = [];
+    var selectedModel = "gpt-4o-mini";
+    var sequence = 1;
 
-        
-        document.getElementById('closeModalButton').addEventListener('click', function() {
-            document.getElementById('welcomeModal').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        });
-
-        
-        window.addEventListener('load', function() {
-            showWelcomeModal();
-        });
-
-        document.getElementById('findButton').addEventListener('click', function() {
-            let prefix = document.getElementById('prefixInput').value;
-            if (!prefix || prefix < 1 || prefix > 9) {
-                prefix = Math.floor(Math.random() * 9) + 1;
-            }
-
-            let randomNumber = Math.floor(Math.random() * 900000000) + 100000000;
-            randomNumber = prefix * 1000000000 + randomNumber;
-            document.getElementById('qqNumber').innerText = randomNumber;
-
-            document.getElementById('status').innerText = "正在获取那个人的信息嗷~";
-            document.getElementById('message').innerText = "";
-            document.getElementById('nickname').innerText = "";
-            document.getElementById('avatar').style.display = 'none';
-            document.getElementById('addFriendButton').style.display = 'none';
-            document.getElementById('copyButton').style.display = 'inline-block';
-
-            fetch(`https://api.sumt.cn/api/qq.state.php?qq=${randomNumber}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.code === 200) {
-                        document.getElementById('status').innerText = `状态: ${data.state}`;
-                        
-
-                        let avatarUrl = `http://q2.qlogo.cn/headimg_dl?dst_uin=${randomNumber}&spec=100`;
-                        document.getElementById('avatar').src = avatarUrl;
-                        document.getElementById('avatar').style.display = 'block';
-
-
-                        let script = document.createElement('script');
-                        script.src = `https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=${randomNumber}`;
-                        document.body.appendChild(script);
-                    } else {
-                        document.getElementById('message').innerText = "没有这个人嗷~";
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('message').innerText = "获取信息失败，请稍后再试嗷~";
+    function sendMessage() {
+      var userInput = document.getElementById("user-input").value.trim();
+      if (userInput === '') return;
+      appendMessage("You", userInput);
+      conversation.push({
+        role: "user",
+        content: userInput,
+        sequence: sequence,
+      });
+      sequence++;
+      var requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer sk-i0qe1QkTxgPwn1peC668B02179674863B4Db89D37e1b245f",  
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: conversation,
+          stream: true,
+          temperature: 0.5,
+          max_tokens: 160000,
+        }),
+      };    
+      fetch("https://api.awoi.me/v1/chat/completions", requestOptions)
+        .then(response => {
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botResponse = '';
+          appendMessage("AI", ""); 
+          function read() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                conversation.push({
+                  role: "assistant",
+                  content: botResponse,
                 });
-        });
-
-        function portraitCallBack(data) {
-            let randomNumber = Object.keys(data)[0];
-            let nickname = data[randomNumber][6];
-
-
-            nickname = decodeURIComponent(escape(nickname));
-
-            if (nickname) {
-                document.getElementById('nickname').innerText = `昵称: ${nickname}`;
-
-      
-                document.getElementById('addFriendButton').style.display = 'inline-block';
-
-               
-                document.getElementById('addFriendButton').addEventListener('click', function() {
-                    let qqUrl = `tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=${randomNumber}`;
-                    window.location.href = qqUrl;
-                });
-            } else {
-                document.getElementById('message').innerText = "没有找到这个人的信息嗷~";
-                document.getElementById('avatar').style.display = 'none';
-            }
-        }
-
-        
-        document.getElementById('copyButton').addEventListener('click', function() {
-            let qqNumber = document.getElementById('qqNumber').innerText;
-            navigator.clipboard.writeText(qqNumber).then(() => {
-                alert('QQ号已复制到剪贴板啦~');
-            }).catch(err => {
-                console.error('复制失败:', err);
+                return;
+              }
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
+              for (let line of lines) {
+                if (line.trim().startsWith('data: ')) {
+                  const json = JSON.parse(line.slice(6));
+                  if (json.choices && json.choices.length > 0 && json.choices[0].delta && json.choices[0].delta.content) {
+                    botResponse += json.choices[0].delta.content;
+                    updateLatestMessage(botResponse);
+                  }
+                }
+              }
+              read();
             });
+          }
+          read();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          appendErrorMessage("Error: " + error);
         });
-    </script>
+      document.getElementById("user-input").value = "";
+    }
 
+    function updateLatestMessage(text) {
+      var chatBox = document.getElementById("chat-box");
+      var latestMessage = chatBox.querySelector(".bot:last-child .message");
+      if (latestMessage) {
+        latestMessage.innerHTML = marked.parse(text);
+        addPreviewButton(latestMessage, text);
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendMessage(sender, message) {
+      var chatBox = document.getElementById("chat-box");
+      var messageDiv = document.createElement("div");
+      messageDiv.className = sender === "You" ? "user" : "bot";
+      var messageContent = `<div class="message">${sender === "You" ? message : marked.parse(message)}</div>`;
+      messageDiv.innerHTML = messageContent;
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addPreviewButton(messageElement, text) {
+      var previewButton = document.createElement("button");
+      previewButton.className = "preview-button";
+      previewButton.innerText = "Preview";
+      previewButton.onclick = function() {
+        openPreviewWindow(messageElement, text);
+      };
+      messageElement.appendChild(previewButton);
+
+      var cancelPreviewButton = document.createElement("button");
+      cancelPreviewButton.className = "cancel-preview-button";
+      cancelPreviewButton.innerText = "Cancel Preview";
+      cancelPreviewButton.onclick = function() {
+        closePreviewWindow(messageElement);
+      };
+      messageElement.appendChild(cancelPreviewButton);
+    }
+
+    function openPreviewWindow(messageElement, text) {
+      var previewWindow = document.createElement("div");
+      previewWindow.className = "preview-window";
+      
+      // 只提取代码块部分
+      var codeBlockMatch = text.match(/```html\s*([\s\S]*?)\s*```/);
+      var codeContent = codeBlockMatch ? codeBlockMatch[1] : '';
+      
+      // Ensure text is properly escaped
+      var escapedText = codeContent.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+      
+      // Create iframe and set srcdoc property
+      previewWindow.innerHTML = `<iframe srcdoc="${escapedText}"></iframe>`;
+      messageElement.appendChild(previewWindow);
+    }
+
+    function closePreviewWindow(messageElement) {
+      var previewWindow = messageElement.querySelector(".preview-window");
+      if (previewWindow) {
+        messageElement.removeChild(previewWindow);
+      }
+    }
+
+    function appendErrorMessage(message) {
+      var chatBox = document.getElementById("chat-box");
+      var errorDiv = document.createElement("div");
+      errorDiv.className = "error";
+      errorDiv.innerHTML = "<strong>Error:</strong> " + message;
+      chatBox.appendChild(errorDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function deleteMessages() {
+      var chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML = '';
+      conversation = [];
+      sequence = 1;
+    }
+
+    function changeModel() {
+      selectedModel = document.getElementById('model-options').value;
+    }
+
+    function closeModal() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'none';
+    }
+
+    document.getElementById("user-input").addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    window.onload = function() {
+      var modal = document.getElementById('welcome-modal');
+      modal.style.display = 'flex';
+    };
+  </script>
 </body>
 </html>
